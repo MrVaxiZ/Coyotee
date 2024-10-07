@@ -139,4 +139,5 @@ C:\Users\VaxiZ\source\repos\Coyotee\libs\direct11\include\d3d10.h(609,1): warnin
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\winerror.h(58650,1):
   see previous definition of 'D3D10_ERROR_FILE_NOT_FOUND'
   
+C:\Users\VaxiZ\source\repos\Coyotee\Coyotee\Coyotee.cpp(74,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Coyotee.vcxproj -> C:\Users\VaxiZ\source\repos\Coyotee\x64\Debug\Coyotee.exe

@@ -13,6 +13,14 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+// Static Data To Points
+static const bool bcTrue = true;
+static const bool bcFalse = false;
+static bool bTrue = true;
+static bool bFalse = false;
+static float windowHeight = 1200;
+static float windowWidth = 1200;
+
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
 static ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
@@ -46,35 +54,35 @@ int main(int, char**)
     }
 
     // Create application window
-    WNDCLASSEXW wc = 
-    { 
-        sizeof(wc), 
-        CS_CLASSDC, 
-        WndProc, 
-        0L, 
-        0L, 
-        GetModuleHandle(nullptr), 
-        icon,
-        nullptr, 
-        nullptr, 
-        nullptr, 
-        L"Coyotee", 
-        nullptr
+    WNDCLASSEXW wc =
+    {
+        sizeof(wc),                // Size of the WNDCLASSEXW structure in bytes (required).
+        CS_CLASSDC,                // Class style (CS_CLASSDC means using a private device context for the window).
+        WndProc,                   // Pointer to the window procedure (WndProc is your window message handler function).
+        0L,                        // Extra bytes to allocate for this window class (0 means no extra space).
+        0L,                        // Extra bytes to allocate for each instance of the window (0 means no extra space).
+        GetModuleHandle(nullptr),  // Handle to the application instance (used to identify the application).
+        icon,                      // Handle to the icon for the window
+        nullptr,                   // Handle to the cursor for the window (nullptr uses the default cursor).
+        nullptr,                   // Handle to the background brush (nullptr means no background brush).
+        nullptr,                   // Menu resource name (nullptr means no menu).
+        L"Coyotee",                // Class name for the window (must match the name used in CreateWindowW).
+        nullptr                    // Handle to the small icon (nullptr means no small icon is specified).
     };
-    ::RegisterClassExW(&wc);
+    ::RegisterClassExW(&wc);        // Registers the window class so it can be used to create a window later.
 
     HWND hwnd = ::CreateWindowW(
-        wc.lpszClassName,
-        L"Coyotee",
-        WS_OVERLAPPEDWINDOW,
-        100,
-        100,
-        1280,
-        800,
-        nullptr,
-        nullptr,
-        wc.hInstance,
-        nullptr
+        wc.lpszClassName,           // The name of the window class (must match the class registered earlier, "Coyotee").
+        wc.lpszClassName,           // The window's title that will appear in the title bar.
+        WS_OVERLAPPEDWINDOW,        // The style of the window (WS_OVERLAPPEDWINDOW means it will be a standard window with a title bar, border, and control buttons).
+        100,                        // X-coordinate of the top-left corner of the window (relative to the screen).
+        100,                        // Y-coordinate of the top-left corner of the window (relative to the screen).
+        windowHeight,               // Width of the window (in pixels)
+        windowWidth,                // Height of the window (in pixels)
+        nullptr,                    // Handle to the parent window (nullptr means no parent window).
+        nullptr,                    // Handle to the menu for the window (nullptr means no menu).
+        wc.hInstance,               // Handle to the application instance (same as the one used in WNDCLASSEXW).
+        nullptr                     // Pointer to additional window creation data (nullptr means no extra data).
     );
 
     // Initialize Direct3D
@@ -112,7 +120,6 @@ int main(int, char**)
     while (!done)
     {
         // Poll and handle messages (inputs, window resize, etc.)
-        // See the WndProc() function below for our to dispatch events to the Win32 backend.
         MSG msg;
         while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
         {
@@ -146,28 +153,44 @@ int main(int, char**)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
+        // Query the current size of the application window
+        RECT rect;
+        if (GetClientRect(hwnd, &rect))
+        {
+            windowWidth = static_cast<float>(rect.right - rect.left);
+            windowHeight = static_cast<float>(rect.bottom - rect.top);
+        }
+
         // Main Window Set-Up
         {
-            ImGui::Begin(" ");
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));  // Set the size to match the application window
 
-            ImVec2 MainWindowSize = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-            ImGui::SetWindowSize(MainWindowSize);
+            bool* pt = &bTrue;
+            ImGui::Begin("Main", pt, ImGuiWindowFlags_NoDecoration);
 
-            ImGui::Button("Button");
+            // Set the button position
+            ImGui::SetCursorPos(ImVec2(200, 200));
+            ImGui::Button("Stream");
 
             ImGui::End();
         }
 
         // Rendering
         ImGui::Render();
-        const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+        const float clear_color_with_alpha[4] =
+        {
+            clear_color.x * clear_color.w,
+            clear_color.y * clear_color.w,
+            clear_color.z * clear_color.w,
+            clear_color.w
+        };
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
         g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         // Present
         HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
-        //HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
         g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
     }
 
@@ -184,7 +207,7 @@ int main(int, char**)
 }
 
 // Helper functions
-
+//  How tf this works? - W.K
 bool CreateDeviceD3D(HWND hWnd)
 {
     // Setup swap chain
