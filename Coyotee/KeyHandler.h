@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "conio.h"
-#include "Defines.h"
+#include "KeyboardKeyCodes.h"
 
 struct KeyHandler {
     // Variables

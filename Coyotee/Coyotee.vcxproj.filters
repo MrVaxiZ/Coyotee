@@ -51,12 +51,21 @@
     <ClCompile Include="..\libs\imgui\backends\imgui_impl_win32.cpp">
       <Filter>Imgui\Backend</Filter>
     </ClCompile>
+    <ClCompile Include="VideoHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IOHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Defines.h">
+    <ClInclude Include="KeyboardKeyCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Aliases.h">
+    <ClInclude Include="UsingAliases.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyHandler.h">
@@ -85,6 +94,21 @@
     </ClInclude>
     <ClInclude Include="..\libs\imgui\backends\imgui_impl_win32.h">
       <Filter>Imgui\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineAliases.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IOHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NamespacesAliases.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticData.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,13 +5,16 @@
 #include <Windows.h>
 
 // Internal Includes
-#include "Defines.h"
+#include "UsingAliases.h"
 #include "KeyHandler.h"
+#include "VideoHandler.h"
+#include "StaticData.h"
 
 // External Includes
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include <thread>
 
 // Static Data To Points
 static const bool bcTrue = true;
@@ -20,6 +23,8 @@ static bool bTrue = true;
 static bool bFalse = false;
 static float windowHeight = 1200;
 static float windowWidth = 1200;
+static const char* START_STREAM_BTN_TEXT = "Start Stream";
+static const char* START_RECORDING_BTN_TEXT = "Start Recording";
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -115,6 +120,8 @@ int main(int, char**)
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    StaticData staticData; // Initialize StaticData class
+
     // Main loop
     bool done = false;
     while (!done)
@@ -166,12 +173,38 @@ int main(int, char**)
             ImGui::SetNextWindowPos(ImVec2(0, 0));
             ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));  // Set the size to match the application window
 
-            bool* pt = &bTrue;
-            ImGui::Begin("Main", pt, ImGuiWindowFlags_NoDecoration);
+            ImGui::Begin("Main", &bTrue, ImGuiWindowFlags_NoDecoration);
 
             // Set the button position
-            ImGui::SetCursorPos(ImVec2(200, 200));
-            ImGui::Button("Stream");
+            ImGui::SetCursorPos(ImVec2(windowWidth - 200, windowHeight - 100));
+            ImGui::Button(START_STREAM_BTN_TEXT, ImVec2(100, 20));
+            if (ImGui::IsItemClicked()) {
+                // Send data through the api
+                printf("Stream btn is pressed!\n");
+            }
+
+            // Set the button position
+            ImGui::SetCursorPos(ImVec2(windowWidth - 200, windowHeight - 75));
+            ImGui::Button(START_RECORDING_BTN_TEXT, ImVec2(100, 20));
+            if (ImGui::IsItemClicked()) {
+                // Stard capture window
+                printf("Recording btn is pressed!\n");
+
+                if (!staticData.getRecordingButtonStatus()) {
+                    staticData.setRecordingButtonStatus(true);
+
+                    std::thread capture_thread([]() {
+                        FFMPEG ffmpeg;
+                        ffmpeg.CaptureAudio();
+                        });
+                    capture_thread.detach();
+                }
+                else
+                {
+                    printf("Recording has been stopped!\n");
+                    staticData.setRecordingButtonStatus(false);
+                }
+            }
 
             ImGui::End();
         }
