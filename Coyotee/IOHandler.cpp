@@ -9,7 +9,7 @@ void IOHandler::CreateFile(const string& filename, const string& path) {
 		printf("Error opening a file!\n");
 	}
 	else {
-		printf("File has been created! At '%s'", fullPath);
+		printf("File has been created! At '%s'", fullPath.c_str());
 	}
 	file.close();
 }
@@ -18,11 +18,11 @@ bool IOHandler::DeleteFile(const string& filePath) {
     try {
         if (fs::exists(filePath)) {
             fs::remove(filePath);
-            printf("File deleted: '%s'", filePath);
+            printf("File deleted: '%s'", filePath.c_str());
             return true;
         }
         else {
-            printf("File does not exist: '%s'", filePath);
+            printf("File does not exist: '%s'", filePath.c_str());
             return false;
         }
     }

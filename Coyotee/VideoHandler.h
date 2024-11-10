@@ -15,9 +15,8 @@ EXTERN {
     #include <libavutil/time.h>
 }
 
-struct FFMPEG {
-    StaticData staticData;
-    int CaptureAudio();
+struct VideoHandler {
+    int CaptureVideo();
 };
 
 #endif // VIDEOHANDLER_H
